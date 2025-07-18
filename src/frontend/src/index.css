@@ -1,1 +1,48 @@
 @import "tailwindcss";
+
+@theme {
+  --color-primary-50: oklch(0.98 0.01 178);
+  --color-primary-100: oklch(0.95 0.03 178);
+  --color-primary-500: oklch(0.72 0.11 178);
+  --color-primary-600: oklch(0.65 0.12 178);
+  --color-primary-700: oklch(0.55 0.13 178);
+  --color-primary-900: oklch(0.35 0.15 178);
+
+  --color-success-500: oklch(0.7 0.15 142);
+  --color-danger-500: oklch(0.65 0.15 25);
+
+  --color-gray-50: oklch(0.98 0.002 247);
+  --color-gray-100: oklch(0.95 0.004 247);
+  --color-gray-200: oklch(0.9 0.005 247);
+  --color-gray-300: oklch(0.83 0.007 247);
+  --color-gray-400: oklch(0.7 0.01 247);
+  --color-gray-500: oklch(0.55 0.012 247);
+  --color-gray-600: oklch(0.45 0.014 247);
+  --color-gray-700: oklch(0.35 0.016 247);
+  --color-gray-800: oklch(0.25 0.018 247);
+  --color-gray-900: oklch(0.15 0.02 247);
+}
+
+body {
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  background: var(--color-gray-50);
+}
+
+.prediction-card {
+  background: linear-gradient(135deg, var(--color-primary-50) 0%, white 100%);
+  border: 1px solid var(--color-primary-100);
+}
+
+.prediction-card:hover {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-100) 0%,
+    var(--color-primary-50) 100%
+  );
+  transform: translateY(-2px);
+  transition: all 0.2s ease;
+}

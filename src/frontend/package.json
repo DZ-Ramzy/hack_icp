@@ -10,8 +10,14 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@dfinity/agent": "^3.0.0",
+    "@dfinity/auth-client": "^3.0.0",
+    "@dfinity/candid": "^3.0.0",
+    "@dfinity/principal": "^3.0.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.7.0",
+    "recharts": "^3.1.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.7",

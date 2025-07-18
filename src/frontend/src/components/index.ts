@@ -5,3 +5,5 @@ export * from "./ErrorDisplay";
 export * from "./InputField";
 export * from "./Loader";
 export * from "./TextArea";
+export * from "./Header";
+export * from "./MarketCard";

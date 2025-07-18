@@ -1,21 +1,65 @@
-type AssistantMessage = record {
-  content : opt text;
-  tool_calls : vec ToolCall;
+type AIInsight = record {
+  generated_at : nat64;
+  market_id : nat64;
+  prediction_lean : opt bool;
+  summary : text;
+  confidence : float64;
+  risks : vec text;
 };
-type ChatMessage = variant {
-  tool : record { content : text; tool_call_id : text };
-  user : record { content : text };
-  assistant : AssistantMessage;
-  system : record { content : text };
+type Market = record {
+  id : nat64;
+  status : MarketStatus;
+  title : text;
+  creator : principal;
+  close_date : nat64;
+  yes_shares : nat64;
+  description : text;
+  created_at : nat64;
+  yes_liquidity : nat64;
+  total_volume : nat64;
+  resolved_outcome : opt bool;
+  category : text;
+  no_liquidity : nat64;
+  no_shares : nat64;
 };
-type FunctionCall = record { name : text; arguments : vec ToolCallArgument };
-type ToolCall = record { id : text; function : FunctionCall };
-type ToolCallArgument = record { value : text; name : text };
-service : {
-  chat : (vec ChatMessage) -> (text);
-  get_count : () -> (nat64) query;
-  greet : (text) -> (text) query;
-  increment : () -> (nat64);
-  prompt : (text) -> (text);
-  set_count : (nat64) -> (nat64);
+type MarketComment = record {
+  id : nat64;
+  content : text;
+  market_id : nat64;
+  author : principal;
+  timestamp : nat64;
+};
+type MarketStatus = variant { PendingValidation; Closed; Active; Resolved };
+type Result = variant { Ok : nat64; Err : text };
+type Result_1 = variant { Ok : Trade; Err : text };
+type Trade = record {
+  id : nat64;
+  shares : nat64;
+  market_id : nat64;
+  trader : principal;
+  is_yes : bool;
+  timestamp : nat64;
+  price : nat64;
+};
+type UserProfile = record {
+  xp : nat64;
+  "principal" : principal;
+  username : text;
+  badges : vec text;
+  created_at : nat64;
+  total_trades : nat64;
+  successful_predictions : nat64;
+};
+service : () -> {
+  add_comment : (nat64, text) -> (Result);
+  buy_shares : (nat64, bool, nat64) -> (Result_1);
+  create_market : (text, text, text, nat64) -> (Result);
+  get_ai_insight : (nat64) -> (opt AIInsight) query;
+  get_leaderboard : () -> (vec UserProfile) query;
+  get_market : (nat64) -> (opt Market) query;
+  get_market_comments : (nat64) -> (vec MarketComment) query;
+  get_market_trades : (nat64) -> (vec Trade) query;
+  get_markets : () -> (vec Market) query;
+  get_treasury_balance : () -> (nat64) query;
+  get_user_profile : (principal) -> (opt UserProfile) query;
 }

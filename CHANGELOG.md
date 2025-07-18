@@ -9,13 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add set_count update method to allow setting the counter to a specific value
-- Add frontend development server scripts (`npm run start`)
-- Add LLM canister implementation
-
-### Changed
-
-- Update dependencies to latest versions
+- Add complete prediction market platform with AMM trading
+- Add user profile system with XP and achievement badges
+- Add AI insight integration for market analysis
+- Add market creation workflow with validation
+- Add leaderboard functionality
+- Add wallet integration (Plug, Stoic, Internet Identity)
+- Add responsive React frontend with modern UI
+- Add comprehensive backend canister with market management
+- Add comment system for market discussions
+- Add market filtering and search capabilities
 
 ## [0.1.0] - 2025-04-24
 

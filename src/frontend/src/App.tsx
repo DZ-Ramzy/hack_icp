@@ -1,72 +1,67 @@
 import { useState } from "react";
-import ReactIcon from "../assets/React-icon.webp";
+import { Header } from "./components";
+import {
+  HomeView,
+  MarketView,
+  CreateMarketView,
+  LeaderboardView,
+} from "./views";
 
-// Import components and views
-import { Loader, ErrorDisplay } from "./components";
-import { GreetingView, CounterView, LlmPromptView } from "./views";
+type Page = "home" | "market" | "create" | "leaderboard";
 
 function App() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | undefined>();
+  const [currentPage, setCurrentPage] = useState<Page>("home");
+  const [selectedMarketId, setSelectedMarketId] = useState<bigint | null>(null);
 
-  const handleError = (errorMessage: string) => {
-    setError(errorMessage);
+  const handleNavigate = (page: string) => {
+    const validPage = page as Page;
+    setCurrentPage(validPage);
+    if (validPage !== "market") {
+      setSelectedMarketId(null);
+    }
   };
 
-  const logoStyle = {
-    animation: "logo-spin 60s linear infinite",
+  const handleMarketSelect = (marketId: bigint) => {
+    setSelectedMarketId(marketId);
+    setCurrentPage("market");
+  };
+
+  const handleMarketCreated = (marketId: bigint) => {
+    setSelectedMarketId(marketId);
+    setCurrentPage("market");
+  };
+
+  const handleBackToHome = () => {
+    setCurrentPage("home");
+    setSelectedMarketId(null);
+  };
+
+  const renderCurrentPage = () => {
+    switch (currentPage) {
+      case "home":
+        return <HomeView onMarketSelect={handleMarketSelect} />;
+      case "market":
+        if (!selectedMarketId) {
+          handleNavigate("home");
+          return null;
+        }
+        return (
+          <MarketView marketId={selectedMarketId} onBack={handleBackToHome} />
+        );
+      case "create":
+        return <CreateMarketView onMarketCreated={handleMarketCreated} />;
+      case "leaderboard":
+        return <LeaderboardView />;
+      default:
+        return <HomeView onMarketSelect={handleMarketSelect} />;
+    }
   };
 
   return (
-    <>
-      <style>
-        {`
-          @keyframes logo-spin {
-            from {
-              transform: rotate(0deg);
-            }
-            to {
-              transform: rotate(360deg);
-            }
-          }
-        `}
-      </style>
-      <div className="flex min-h-screen items-center justify-center bg-gray-800 text-white">
-        <div className="mx-auto w-full max-w-4xl space-y-8 p-8 text-center">
-          <div className="mb-8">
-            <a href="https://reactjs.org" target="_blank" rel="noreferrer">
-              <img
-                src={ReactIcon}
-                className="mx-auto h-24 p-6 will-change-[filter] hover:drop-shadow-[0_0_2em_#61dafbaa] motion-reduce:animate-none"
-                style={logoStyle}
-                alt="React logo"
-              />
-            </a>
-          </div>
-
-          <div className="space-y-4">
-            <h1 className="text-4xl font-bold">Vibe Coding Template</h1>
-            <h2 className="text-xl">React + Rust + Internet Computer</h2>
-          </div>
-
-          {/* Content Sections */}
-          <div className="space-y-6">
-            {/* Greeting Section */}
-            <GreetingView onError={handleError} setLoading={setLoading} />
-
-            {/* Counter Section */}
-            <CounterView onError={handleError} setLoading={setLoading} />
-
-            {/* LLM Prompt Section */}
-            <LlmPromptView onError={handleError} setLoading={setLoading} />
-          </div>
-
-          {/* Loading and Error States */}
-          {loading && !error && <Loader />}
-          {!!error && <ErrorDisplay message={error} />}
-        </div>
-      </div>
-    </>
+    <div className="min-h-screen bg-gray-50">
+      <Header currentPage={currentPage} onNavigate={handleNavigate} />
+      <main>{renderCurrentPage()}</main>
+    </div>
   );
 }
 
