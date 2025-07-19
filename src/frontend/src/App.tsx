@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Header } from "./components";
+import { Header, Footer } from "./components";
 import {
   HomeView,
   MarketView,
@@ -58,9 +58,10 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="flex min-h-screen flex-col bg-gray-50">
       <Header currentPage={currentPage} onNavigate={handleNavigate} />
-      <main>{renderCurrentPage()}</main>
+      <main className="flex-1">{renderCurrentPage()}</main>
+      <Footer />
     </div>
   );
 }

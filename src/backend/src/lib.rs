@@ -74,14 +74,14 @@ pub struct MarketComment {
 // State management
 thread_local! {
     static MARKETS: RefCell<HashMap<u64, Market>> = RefCell::new(HashMap::new());
-    static TRADES: RefCell<Vec<Trade>> = RefCell::new(Vec::new());
+    static TRADES: RefCell<Vec<Trade>> = const { RefCell::new(Vec::new()) };
     static USER_PROFILES: RefCell<HashMap<Principal, UserProfile>> = RefCell::new(HashMap::new());
     static AI_INSIGHTS: RefCell<HashMap<u64, AIInsight>> = RefCell::new(HashMap::new());
-    static COMMENTS: RefCell<Vec<MarketComment>> = RefCell::new(Vec::new());
-    static NEXT_MARKET_ID: RefCell<u64> = RefCell::new(1);
-    static NEXT_TRADE_ID: RefCell<u64> = RefCell::new(1);
-    static NEXT_COMMENT_ID: RefCell<u64> = RefCell::new(1);
-    static TREASURY: RefCell<u64> = RefCell::new(0);
+    static COMMENTS: RefCell<Vec<MarketComment>> = const { RefCell::new(Vec::new()) };
+    static NEXT_MARKET_ID: RefCell<u64> = const { RefCell::new(1) };
+    static NEXT_TRADE_ID: RefCell<u64> = const { RefCell::new(1) };
+    static NEXT_COMMENT_ID: RefCell<u64> = const { RefCell::new(1) };
+    static TREASURY: RefCell<u64> = const { RefCell::new(0) };
 }
 
 // Initialize with sample data

@@ -10,6 +10,10 @@ export interface AuthState {
 export class AuthService {
   private static authClient: AuthClient | null = null;
   private static listeners: ((state: AuthState) => void)[] = [];
+  private static walletConnection: {
+    type: "plug" | "stoic" | "ii" | null;
+    principal: Principal | null;
+  } = { type: null, principal: null };
 
   static async init(): Promise<void> {
     if (!this.authClient) {
@@ -21,10 +25,24 @@ export class AuthService {
     try {
       await this.init();
 
+      // For local development, redirect to using wallets
+      const isLocal =
+        process.env.DFX_NETWORK === "local" ||
+        process.env.NODE_ENV === "development";
+
+      if (isLocal) {
+        alert(
+          "En mode développement local, veuillez utiliser Plug Wallet ou Stoic Wallet pour vous connecter.",
+        );
+        return false;
+      }
+
       return new Promise((resolve) => {
         this.authClient!.login({
           identityProvider: "https://identity.ic0.app",
           onSuccess: () => {
+            // Store II connection state
+            this.walletConnection = { type: "ii", principal: null }; // Principal will be updated in getAuthState
             this.notifyListeners();
             resolve(true);
           },
@@ -44,6 +62,10 @@ export class AuthService {
     try {
       await this.init();
       await this.authClient!.logout();
+
+      // Reset wallet connection state
+      this.walletConnection = { type: null, principal: null };
+
       this.notifyListeners();
     } catch (error) {
       console.error("Logout failed:", error);
@@ -53,6 +75,16 @@ export class AuthService {
   static async getAuthState(): Promise<AuthState> {
     await this.init();
 
+    // Check for wallet connections first
+    if (this.walletConnection.type && this.walletConnection.principal) {
+      return {
+        isAuthenticated: true,
+        principal: this.walletConnection.principal,
+        identity: null, // Wallets don't use the same identity system
+      };
+    }
+
+    // Fallback to Internet Identity
     const isAuthenticated = await this.authClient!.isAuthenticated();
     const identity = isAuthenticated ? this.authClient!.getIdentity() : null;
     const principal = identity ? identity.getPrincipal() : null;
@@ -99,10 +131,24 @@ export class AuthService {
 
       const plug = (window as any).ic.plug;
 
+      // Determine the host based on environment
+      const isLocal =
+        process.env.DFX_NETWORK === "local" ||
+        process.env.NODE_ENV === "development";
+      const host = isLocal
+        ? "http://127.0.0.1:4943"
+        : "https://mainnet.dfinity.network";
+
       // Request connection
       const connected = await plug.requestConnect({
         whitelist: [process.env.CANISTER_ID_BACKEND],
-        host: "https://mainnet.dfinity.network",
+        host,
+      });
+
+      console.log("Plug connection request details:", {
+        canisterId: process.env.CANISTER_ID_BACKEND,
+        host,
+        connected,
       });
 
       if (connected) {
@@ -111,6 +157,13 @@ export class AuthService {
           "Connected to Plug wallet with principal:",
           principal.toString(),
         );
+
+        // Store wallet connection state
+        this.walletConnection = {
+          type: "plug",
+          principal: principal,
+        };
+
         this.notifyListeners();
         return true;
       }
@@ -142,6 +195,13 @@ export class AuthService {
           "Connected to Stoic wallet with principal:",
           principal.toString(),
         );
+
+        // Store wallet connection state
+        this.walletConnection = {
+          type: "stoic",
+          principal: principal,
+        };
+
         this.notifyListeners();
         return true;
       }

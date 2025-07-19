@@ -1,4 +1,5 @@
 import { backend } from "../../../declarations/backend";
+import { idlFactory } from "../../../declarations/backend/backend.did.js";
 import type {
   Market,
   Trade,
@@ -8,6 +9,7 @@ import type {
   MarketStatus,
 } from "../../../declarations/backend/backend.did";
 import { Principal } from "@dfinity/principal";
+import { AuthService } from "./auth";
 
 export interface MarketFilters {
   status?: "active" | "closed" | "resolved" | "pending";
@@ -15,6 +17,59 @@ export interface MarketFilters {
 }
 
 export class BackendService {
+  // Test connection function
+  static async testConnection(): Promise<boolean> {
+    try {
+      console.log("Testing backend connection...");
+
+      // Check authentication first
+      const authState = await AuthService.getAuthState();
+      if (!authState.isAuthenticated) {
+        console.error("Not authenticated");
+        return false;
+      }
+
+      // Access private walletConnection property to determine connection type
+      const walletConnection = (AuthService as any).walletConnection;
+      console.log("Wallet connection type:", walletConnection.type);
+
+      // Check if we're in local development mode
+      const isLocal =
+        process.env.DFX_NETWORK === "local" ||
+        process.env.NODE_ENV === "development";
+      console.log("Is local development:", isLocal);
+
+      let actor;
+
+      if (
+        !isLocal &&
+        walletConnection.type === "plug" &&
+        (window as any).ic?.plug
+      ) {
+        // Use Plug's createActor method only for mainnet/production
+        console.log("Using Plug agent for backend test (mainnet)");
+        actor = await (window as any).ic.plug.createActor({
+          canisterId: process.env.CANISTER_ID_BACKEND,
+          interfaceFactory: idlFactory,
+        });
+      } else {
+        // Use default backend actor for local development or II
+        console.log("Using default backend actor (local development or II)");
+        actor = backend;
+      }
+
+      const markets = await actor.get_markets();
+      console.log(
+        "Backend connection successful. Markets fetched:",
+        markets.length,
+      );
+      return true;
+    } catch (error) {
+      console.error("Backend connection test failed:", error);
+      return false;
+    }
+  }
+
   // Market functions
   static async getMarkets(): Promise<Market[]> {
     try {

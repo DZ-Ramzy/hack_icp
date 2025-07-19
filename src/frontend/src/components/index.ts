@@ -7,3 +7,4 @@ export * from "./Loader";
 export * from "./TextArea";
 export * from "./Header";
 export * from "./MarketCard";
+export * from "./Footer";

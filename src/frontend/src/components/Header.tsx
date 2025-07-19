@@ -61,10 +61,10 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
               onClick={() => onNavigate("home")}
             >
               <div className="bg-primary-500 flex h-8 w-8 items-center justify-center rounded-lg">
-                <span className="text-sm font-bold text-white">PM</span>
+                <span className="text-sm font-bold text-white">CP</span>
               </div>
               <span className="ml-2 text-xl font-bold text-gray-900">
-                PredictMarket
+                ChainPredict ICP
               </span>
             </div>
 
