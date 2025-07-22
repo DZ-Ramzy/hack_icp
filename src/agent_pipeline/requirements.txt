@@ -1,0 +1,35 @@
+# Agent Pipeline Requirements
+# Core agent framework
+openai-agents
+
+# AI/ML dependencies
+openai
+tavily-python
+
+# Data handling
+pydantic
+numpy
+
+# CLI and UI
+rich
+
+# Web and async
+aiohttp
+asyncio-timeout
+
+# Database and storage
+aiosqlite
+
+# Utilities
+python-dotenv
+typing-extensions
+
+# Development dependencies (optional)
+pytest
+pytest-asyncio
+black
+isort
+
+# Integration dependencies
+fastapi  # For future API server
+uvicorn   # For API server

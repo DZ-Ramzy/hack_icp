@@ -1,3 +1,7 @@
+# environment configuration
+.env
+# Ignore pychache project files
+__pycache__/
 # Various IDEs and Editors
 .idea/
 **/*~
