@@ -91,7 +91,7 @@ export function ModernMarketCard({
 
   return (
     <div
-      className={`group card-gradient hover-lift hover-glow relative cursor-pointer overflow-hidden transition-all duration-300 ${
+      className={`card-gradient hover-lift hover-glow group relative cursor-pointer overflow-hidden transition-all duration-300 ${
         isHovered ? "scale-105" : ""
       }`}
       onClick={() => onSelect(id)}

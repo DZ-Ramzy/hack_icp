@@ -1,6 +1,6 @@
 use candid::{CandidType, Deserialize, Principal};
+// use ic_cdk::api::call::call; // Uncomment when using real LLM canister
 use ic_cdk::export_candid;
-use ic_cdk::api::call::call;
 use std::cell::RefCell;
 use std::collections::HashMap;
 
@@ -96,7 +96,7 @@ pub struct ChatRequestV0 {
 }
 
 // LLM Canister ID (replace with actual canister ID)
-const LLM_CANISTER_ID: &str = "w36hm-eqaaa-aaaal-qr76a-cai";
+// const LLM_CANISTER_ID: &str = "w36hm-eqaaa-aaaal-qr76a-cai"; // Uncomment when using real LLM canister
 
 // State management
 thread_local! {
@@ -153,7 +153,7 @@ fn init() {
             description: "This market resolves to YES if Tesla (TSLA) stock price reaches or exceeds $500 USD before June 30, 2025.".to_string(),
             category: "Finance".to_string(),
             creator: Principal::anonymous(),
-            close_date: 1767292799, 
+            close_date: 1767292799,
             status: MarketStatus::Active,
             yes_shares: 300,
             no_shares: 700,
@@ -389,20 +389,20 @@ fn get_leaderboard() -> Vec<UserProfile> {
 async fn get_ai_insight(market_id: u64) -> Option<AIInsight> {
     // First check if we have a cached insight
     let cached = AI_INSIGHTS.with(|insights| insights.borrow().get(&market_id).cloned());
-    
+
     // If we have a recent cached insight (less than 1 hour old), return it
     if let Some(insight) = cached {
         let current_time = ic_cdk::api::time();
         let one_hour = 3600 * 1_000_000_000; // 1 hour in nanoseconds
-        
+
         if current_time - insight.generated_at < one_hour {
             return Some(insight);
         }
     }
-    
+
     // Get market data
     let market = MARKETS.with(|markets| markets.borrow().get(&market_id).cloned())?;
-    
+
     // Create prompt for the AI agent
     let prompt = format!(
         "Analyze this prediction market and provide insights:
@@ -431,28 +431,32 @@ async fn get_ai_insight(market_id: u64) -> Option<AIInsight> {
         market.total_volume as f64 / 100_000_000.0,
         market.status
     );
-    
+
     // Create chat request
-    let chat_request = ChatRequestV0 {
-        model: "gpt-4o-mini".to_string(), // or whatever model you're using
+    let _chat_request = ChatRequestV0 {
+        model: "gpt-4o-mini".to_string(),
         messages: vec![
             ChatMessageV0 {
                 role: ChatRole::System,
                 content: "You are an expert financial analyst specializing in prediction markets. Provide clear, objective analysis based on market data.".to_string(),
             },
             ChatMessageV0 {
-                role: ChatRole::User, 
+                role: ChatRole::User,
                 content: prompt,
             }
         ],
     };
-    
+
     // For testing purposes, let's create a mock AI response first
     // TODO: Remove this when the LLM canister is properly accessible
     let market_title = MARKETS.with(|markets| {
-        markets.borrow().get(&market_id).map(|m| m.title.clone()).unwrap_or_default()
+        markets
+            .borrow()
+            .get(&market_id)
+            .map(|m| m.title.clone())
+            .unwrap_or_default()
     });
-    
+
     let mock_insight = AIInsight {
         market_id,
         summary: format!(
@@ -468,33 +472,40 @@ async fn get_ai_insight(market_id: u64) -> Option<AIInsight> {
         prediction_lean: Some(true), // Slightly bullish
         generated_at: ic_cdk::api::time(),
     };
-    
+
     // Cache the mock insight
     AI_INSIGHTS.with(|insights| {
-        insights.borrow_mut().insert(market_id, mock_insight.clone());
+        insights
+            .borrow_mut()
+            .insert(market_id, mock_insight.clone());
     });
-    
-    return Some(mock_insight);
-    
+
+    Some(mock_insight)
+
+    // TODO: Uncomment this when ready to use the real LLM canister
+    /*
     // Call the LLM canister
     match Principal::from_text(LLM_CANISTER_ID) {
         Ok(llm_principal) => {
-            let response: Result<(String,), _> = call(llm_principal, "v0_chat", (chat_request,)).await;
-            
+            let response: Result<(String,), _> =
+                call(llm_principal, "v0_chat", (_chat_request,)).await;
+
             match response {
                 Ok((ai_response,)) => {
                     // Parse the AI response and create AIInsight
                     let insight = parse_ai_response(&ai_response, market_id);
-                    
+
                     // Cache the insight
                     if let Some(ref insight_to_cache) = insight {
                         AI_INSIGHTS.with(|insights| {
-                            insights.borrow_mut().insert(market_id, insight_to_cache.clone());
+                            insights
+                                .borrow_mut()
+                                .insert(market_id, insight_to_cache.clone());
                         });
                     }
-                    
+
                     insight
-                },
+                }
                 Err(e) => {
                     // Fallback to a default insight if AI call fails
                     Some(AIInsight {
@@ -507,12 +518,13 @@ async fn get_ai_insight(market_id: u64) -> Option<AIInsight> {
                     })
                 }
             }
-        },
+        }
         Err(_) => {
             // Invalid canister ID
             Some(AIInsight {
                 market_id,
-                summary: "Invalid LLM canister ID configuration. Please check the setup.".to_string(),
+                summary: "Invalid LLM canister ID configuration. Please check the setup."
+                    .to_string(),
                 confidence: 0.1,
                 risks: vec!["Configuration error".to_string()],
                 prediction_lean: None,
@@ -520,24 +532,31 @@ async fn get_ai_insight(market_id: u64) -> Option<AIInsight> {
             })
         }
     }
+    */
 }
 
 // Helper function to parse AI response
+// TODO: Uncomment when using real LLM canister
+/*
 fn parse_ai_response(response: &str, market_id: u64) -> Option<AIInsight> {
     // Try to parse JSON response from AI
     // This is a simplified parser - you might want to use a proper JSON library
-    
+
     // For now, create a basic insight with the raw response
     // You can enhance this to properly parse JSON
     Some(AIInsight {
         market_id,
         summary: response.to_string(),
         confidence: 0.7, // Default confidence
-        risks: vec!["Market volatility".to_string(), "Unexpected events".to_string()],
+        risks: vec![
+            "Market volatility".to_string(),
+            "Unexpected events".to_string(),
+        ],
         prediction_lean: None, // Parse from response
         generated_at: ic_cdk::api::time(),
     })
 }
+*/
 
 #[ic_cdk::update]
 fn add_comment(market_id: u64, content: String) -> Result<u64, String> {

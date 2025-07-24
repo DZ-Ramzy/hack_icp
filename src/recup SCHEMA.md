@@ -9,6 +9,7 @@ This platform combines decentralized prediction markets with sophisticated AI ag
 ## Architecture
 
 ### Frontend Application
+
 - **Next.js** with TypeScript for modern web interface
 - **TailwindCSS** for responsive styling and design system
 - **AgentJS** for seamless ICP blockchain integration
@@ -16,6 +17,7 @@ This platform combines decentralized prediction markets with sophisticated AI ag
 - **Wallet Integration** supporting Plug, Stoic, and Internet Identity
 
 ### Backend Infrastructure
+
 - **Motoko Canisters** for decentralized smart contract logic
   - Market Canister: Market creation, AMM trading, liquidity management
   - User Canister: User profiles, XP system, leaderboard tracking
@@ -24,6 +26,7 @@ This platform combines decentralized prediction markets with sophisticated AI ag
 - **Decentralized Storage** for market data and user information
 
 ### AI Agent Pipeline
+
 - **Multi-Agent Architecture** with specialized analysis phases
 - **Real-Time Research** via Tavily API integration
 - **Advanced Analytics** with Kelly Criterion optimization
@@ -50,12 +53,12 @@ graph TD
     E -->|Needs More Info| D
     E -->|Sufficient Info| F[/Research Report Synthesis/]
     F --> G(Comprehensive Research Report)
-    
+
     B1(SubQueryAgent) -.-> C
     B2(FollowUpDecisionAgent) -.-> E
     B3(SynthesisAgent) -.-> F
     B4(Tavily API) ==> D
-    
+
     %% Lighter colors with good contrast
     style A fill:#bbdefb,stroke:#1976d2,stroke-width:3px,color:#0d47a1
     style G fill:#c8e6c9,stroke:#388e3c,stroke-width:3px,color:#1b5e20
@@ -63,7 +66,7 @@ graph TD
     style E fill:#f8bbd9,stroke:#c2185b,stroke-width:3px,color:#ad1457
     style C fill:#ffab91,stroke:#ff5722,stroke-width:2px,color:#bf360c
     style F fill:#a5d6a7,stroke:#4caf50,stroke-width:2px,color:#2e7d32
-    
+
     %% Agent styling - lighter grays
     style B1 fill:#cfd8dc,stroke:#607d8b,stroke-width:2px,color:#37474f
     style B2 fill:#cfd8dc,stroke:#607d8b,stroke-width:2px,color:#37474f
@@ -85,18 +88,18 @@ graph TD
     C --> D[/Insight Extraction Phase/]
     D --> E{{Signal Strength Calculation}}
     E --> F(AnalysisResult with Market Insights)
-    
+
     B1(MarketAnalysisAgent) -.-> C
     B2(InsightExtractionAgent) -.-> D
     B3(Signal Calculator) -.-> E
-    
+
     %% Lighter colors with good contrast
     style A fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#0d47a1
     style F fill:#c8e6c9,stroke:#388e3c,stroke-width:3px,color:#1b5e20
     style C fill:#a5d6a7,stroke:#4caf50,stroke-width:2px,color:#2e7d32
     style D fill:#e1bee7,stroke:#9c27b0,stroke-width:2px,color:#6a1b9a
     style E fill:#f8bbd9,stroke:#c2185b,stroke-width:3px,color:#ad1457
-    
+
     %% Agent styling - lighter grays with rounded corners
     style B1 fill:#cfd8dc,stroke:#607d8b,stroke-width:2px,color:#37474f
     style B2 fill:#cfd8dc,stroke:#607d8b,stroke-width:2px,color:#37474f
@@ -116,18 +119,18 @@ graph TD
     C --> D[/Position Sizing Calculation/]
     D --> E{{Kelly Fraction & EV Calculation}}
     E --> F(PredictionResult with Probabilities)
-    
+
     B1(ProbabilityPredictionAgent) -.-> C
     B2(PositionSizingAgent) -.-> D
     B3(Kelly Calculator) -.-> E
-    
+
     %% Lighter colors with good contrast
     style A fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#0d47a1
     style F fill:#c8e6c9,stroke:#388e3c,stroke-width:3px,color:#1b5e20
     style C fill:#e1f5fe,stroke:#1976d2,stroke-width:2px,color:#0d47a1
     style D fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px,color:#6a1b9a
     style E fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#e65100
-    
+
     %% Agent styling - lighter grays with rounded corners
     style B1 fill:#cfd8dc,stroke:#607d8b,stroke-width:2px,color:#37474f
     style B2 fill:#cfd8dc,stroke:#607d8b,stroke-width:2px,color:#37474f
@@ -148,11 +151,11 @@ graph TD
     D --> E{{Risk Assessment}}
     E --> F[Final Decision Generation]
     F --> G(MarketAdviceReport)
-    
+
     B1(MarketAdviceAgent) -.-> C
     B2(RiskAssessmentAgent) -.-> E
     B3(Decision Framework) -.-> F
-    
+
     %% Lighter colors with good contrast
     style A fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#0d47a1
     style G fill:#c8e6c9,stroke:#388e3c,stroke-width:3px,color:#1b5e20
@@ -160,7 +163,7 @@ graph TD
     style D fill:#fce4ec,stroke:#e91e63,stroke-width:2px,color:#ad1457
     style E fill:#ffebee,stroke:#f44336,stroke-width:2px,color:#c62828
     style F fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px,color:#6a1b9a
-    
+
     %% Agent styling - lighter grays with rounded corners
     style B1 fill:#cfd8dc,stroke:#607d8b,stroke-width:2px,color:#37474f
     style B2 fill:#cfd8dc,stroke:#607d8b,stroke-width:2px,color:#37474f
@@ -184,14 +187,14 @@ graph TD
     G --> H[Synthesis & Analysis]
     D --> I(EnrichedScenarioAnalysis)
     H --> I
-    
+
     B1(ResearchDecisionAgent) -.-> C
     B2(ScenarioGenerator) -.-> E
     B3(ScenarioEvaluator) -.-> F
     B4(EnrichmentAgent) -.-> G
     B5(WebResearchAgent) ==> G
     B6(SynthesisAgent) -.-> H
-    
+
     %% Lighter colors with good contrast
     style A fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#0d47a1
     style I fill:#c8e6c9,stroke:#388e3c,stroke-width:3px,color:#1b5e20
@@ -201,7 +204,7 @@ graph TD
     style F fill:#fce4ec,stroke:#e91e63,stroke-width:2px,color:#ad1457
     style G fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#4a148c
     style H fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#01579b
-    
+
     %% Agent styling - lighter grays with rounded corners
     style B1 fill:#cfd8dc,stroke:#607d8b,stroke-width:2px,color:#37474f
     style B2 fill:#cfd8dc,stroke:#607d8b,stroke-width:2px,color:#37474f
@@ -228,18 +231,18 @@ graph TD
     C --> D[/Date & Evidence Extraction/]
     D --> E{{Confidence Assessment}}
     E --> F(EventStatus Result)
-    
+
     B1(Web Search Tool) -.-> C
     B2(Date Extractor) -.-> D
     B3(Evidence Analyzer) -.-> E
-    
+
     %% Lighter colors with good contrast
     style A fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#0d47a1
     style F fill:#c8e6c9,stroke:#388e3c,stroke-width:3px,color:#1b5e20
     style C fill:#e3f2fd,stroke:#0277bd,stroke-width:2px,color:#01579b
     style D fill:#fce4ec,stroke:#e91e63,stroke-width:2px,color:#ad1457
     style E fill:#fff8e1,stroke:#ffa000,stroke-width:2px,color:#e65100
-    
+
     %% Agent styling - lighter grays with rounded corners
     style B1 fill:#cfd8dc,stroke:#607d8b,stroke-width:2px,color:#37474f
     style B2 fill:#cfd8dc,stroke:#607d8b,stroke-width:2px,color:#37474f
@@ -254,19 +257,19 @@ graph TD
     C --> D[[Market Question Generation]]
     D --> E{{Question Validation}}
     E --> F(List of MarketQuestions)
-    
+
     B1(News Search Tool) -.-> C
     B2(Question Generator) -.-> D
     B3(Question Validator) -.-> E
     B4(Fallback Templates) -.-> E
-    
+
     %% Lighter colors with good contrast
     style A fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#0d47a1
     style F fill:#c8e6c9,stroke:#388e3c,stroke-width:3px,color:#1b5e20
     style C fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#2e7d32
     style D fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#e65100
     style E fill:#fff8e1,stroke:#fb8c00,stroke-width:2px,color:#e65100
-    
+
     %% Agent styling - lighter grays with rounded corners
     style B1 fill:#cfd8dc,stroke:#607d8b,stroke-width:2px,color:#37474f
     style B2 fill:#cfd8dc,stroke:#607d8b,stroke-width:2px,color:#37474f
@@ -285,12 +288,12 @@ graph TD
     D --> E{{Portfolio Constraints}}
     E --> F[Stress Testing]
     F --> G(Optimal Position Size)
-    
+
     B1(Kelly Modes) -.-> C
     B2(Risk Factors) -.-> D
     B3(Correlation Limits) -.-> E
     B4(Monte Carlo) ==> F
-    
+
     %% Lighter colors with good contrast
     style A fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#0d47a1
     style G fill:#c8e6c9,stroke:#388e3c,stroke-width:3px,color:#1b5e20
@@ -298,7 +301,7 @@ graph TD
     style D fill:#fce4ec,stroke:#e91e63,stroke-width:2px,color:#ad1457
     style E fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#e65100
     style F fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px,color:#6a1b9a
-    
+
     %% Agent styling - lighter grays with rounded corners
     style B1 fill:#cfd8dc,stroke:#607d8b,stroke-width:2px,color:#37474f
     style B2 fill:#cfd8dc,stroke:#607d8b,stroke-width:2px,color:#37474f
@@ -315,12 +318,12 @@ graph TD
     D --> E{{Pattern Detection}}
     E --> F[/Learning Insights/]
     F --> G(Recommendation Updates)
-    
+
     B1(SQLite Database) ==> C
     B2(Metrics Calculator) -.-> D
     B3(Pattern Analyzer) -.-> E
     B4(Insight Generator) -.-> F
-    
+
     %% Lighter colors with good contrast
     style A fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#0d47a1
     style G fill:#c8e6c9,stroke:#388e3c,stroke-width:3px,color:#1b5e20
@@ -328,7 +331,7 @@ graph TD
     style D fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#e65100
     style E fill:#fff8e1,stroke:#f57c00,stroke-width:2px,color:#e65100
     style F fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px,color:#6a1b9a
-    
+
     %% Agent styling - lighter grays with rounded corners
     style B1 fill:#cfd8dc,stroke:#607d8b,stroke-width:2px,color:#37474f
     style B2 fill:#cfd8dc,stroke:#607d8b,stroke-width:2px,color:#37474f
@@ -348,13 +351,13 @@ graph TD
     E --> F[Advice Generation]
     F --> G[Memory Storage]
     G --> H(PipelineResult)
-    
+
     B1(SearchAgent) -.-> C
     B2(ThinkThoroughlyAgent) -.-> D
     B3(AnalysisAgent + PredictionAgent) -.-> E
     B4(AdviceAgent) -.-> F
     B5(MemorySystem) ==> G
-    
+
     %% Lighter colors with good contrast
     style A fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#0d47a1
     style H fill:#c8e6c9,stroke:#388e3c,stroke-width:3px,color:#1b5e20
@@ -363,7 +366,7 @@ graph TD
     style E fill:#fff8e1,stroke:#f57c00,stroke-width:2px,color:#e65100
     style F fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#e65100
     style G fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#6a1b9a
-    
+
     %% Agent styling - lighter grays with rounded corners
     style B1 fill:#cfd8dc,stroke:#607d8b,stroke-width:2px,color:#37474f
     style B2 fill:#cfd8dc,stroke:#607d8b,stroke-width:2px,color:#37474f
@@ -387,13 +390,13 @@ sequenceDiagram
     participant Predict as PredictionAgent
     participant Advice as AdviceAgent
     participant Memory as MemorySystem
-    
+
     Note over Caller,Orch: Pipeline Initialization
     Caller->>Orch: analyze_market(question, config, market_price)
     Orch->>Orch: validate_required_keys()
     Orch->>Orch: initialize_agents()
     Orch->>Orch: create_run_id()
-    
+
     Note over Orch,Search: PHASE 1: RESEARCH
     Orch->>Search: _do_research(question, depth)
     Search->>Search: research(question)
@@ -401,7 +404,7 @@ sequenceDiagram
     Search->>Search: perform_research() [parallel execution]
     Search->>Search: synthesize_report()
     Search-->>Orch: research_result
-    
+
     Note over Orch,Think: PHASE 2: SCENARIO ANALYSIS
     alt use_scenario_analysis = true
         Orch->>Think: _do_scenario_analysis(question, research_result)
@@ -417,21 +420,21 @@ sequenceDiagram
     else
         Orch->>Orch: scenario_report = None
     end
-    
+
     Note over Orch,Predict: PHASE 3: PREDICTION GENERATION
     Orch->>Analysis: analyze_report(research_result, question)
     Analysis->>Analysis: market_analysis_phase()
     Analysis->>Analysis: insight_extraction_phase()
     Analysis->>Analysis: calculate_signal_strength()
     Analysis-->>Orch: analysis_result
-    
+
     Orch->>Predict: generate_prediction(analysis_result, question, market_price)
     Predict->>Predict: probability_estimation()
     Predict->>Predict: _calculate_kelly_fraction()
     Predict->>Predict: _calculate_expected_value()
     Predict->>Predict: confidence_assessment()
     Predict-->>Orch: prediction_result
-    
+
     Note over Orch,Advice: PHASE 4: SYNTHESIS & ADVICE
     Orch->>Advice: _generate_advice(prediction_result, research_result, scenario_report)
     Advice->>Advice: generate_market_advice()
@@ -439,24 +442,24 @@ sequenceDiagram
     Advice->>Advice: _generate_risk_assessment()
     Advice->>Advice: conflict_resolution()
     Advice-->>Orch: advice_result
-    
+
     Note over Orch,Memory: PHASE 5: MEMORY STORAGE
     Orch->>Memory: _store_results(prediction_result, question, config)
     Memory->>Memory: store_prediction()
     Memory->>Memory: update_performance_metrics()
     Memory->>Memory: extract_learning_insights()
     Memory-->>Orch: storage_complete
-    
+
     Orch->>Orch: build_pipeline_result()
     Orch-->>Caller: PipelineResult{success, recommendation, probability, confidence, reasoning, duration}
-    
+
     Note over Orch,Memory: Error Handling & Timeouts
     alt Timeout (300s default)
         Orch->>Orch: asyncio.TimeoutError
         Orch->>Orch: _create_error_result()
         Orch-->>Caller: PipelineResult{success=false, errors}
     end
-    
+
     alt Agent Failure
         Search->>Search: TavilyError/OpenAIError
         Search-->>Orch: Exception
@@ -472,28 +475,28 @@ sequenceDiagram
 graph TD
     A([Market Question]) --> B[Research Phase]
     B --> C(Research Report)
-    
+
     C --> D[Scenario Analysis]
     C --> E[Market Analysis]
-    
+
     D --> F(Scenario Results)
     E --> G(Analysis Results)
-    
+
     F --> H[Prediction Phase]
     G --> H
     H --> I(Prediction Results)
-    
+
     I --> J[Advice Phase]
     J --> K(Final Recommendation)
-    
+
     I --> L[Memory Storage]
     K --> L
     L --> M(Learning Insights)
-    
+
     %% External inputs
     N(Market Events) -.-> A
     O(News Analysis) -.-> A
-    
+
     %% Styling with better contrast and readability
     style A fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#0d47a1
     style K fill:#c8e6c9,stroke:#388e3c,stroke-width:3px,color:#1b5e20
@@ -548,6 +551,7 @@ ICP_hack/
 ## Features
 
 ### Core Functionality
+
 - **Decentralized Markets**: Create and trade prediction markets on ICP
 - **Automated Market Making**: LMSR-based price discovery mechanism
 - **AI-Powered Insights**: Advanced market analysis and predictions
@@ -555,6 +559,7 @@ ICP_hack/
 - **Real-Time Data**: Live market research and trend analysis
 
 ### User Experience
+
 - **Modern Interface**: Responsive design with intuitive navigation
 - **Wallet Integration**: Multiple wallet options with seamless connection
 - **Performance Tracking**: Comprehensive leaderboard and XP system
@@ -562,6 +567,7 @@ ICP_hack/
 - **Mobile Responsive**: Optimized for all device types
 
 ### Advanced Analytics
+
 - **Scenario Planning**: Multi-scenario analysis with probability weighting
 - **Memory Learning**: Continuous improvement through outcome tracking
 - **Signal Processing**: Multi-dimensional market signal extraction
@@ -571,12 +577,14 @@ ICP_hack/
 ## Installation and Setup
 
 ### Prerequisites
+
 - Node.js 16 or higher
 - DFX SDK for ICP development
 - Python 3.9+ for AI agent pipeline
 - Git for version control
 
 ### Environment Configuration
+
 ```bash
 # Required API keys
 export OPENAI_API_KEY="your_openai_api_key"
@@ -590,33 +598,37 @@ export PIPELINE_TIMEOUT="300"  # 5 minutes default
 ### Installation Steps
 
 1. **Clone Repository**
+
    ```bash
    git clone <repository-url>
    cd icp_agents/ICP_hack
    ```
 
 2. **Install DFX SDK**
+
    ```bash
    sh -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"
    ```
 
 3. **Install Dependencies**
+
    ```bash
    # Frontend dependencies
    cd frontend && npm install && cd ..
-   
+
    # Python dependencies for AI pipeline
    cd agent_pipeline && pip install -r requirements.txt && cd ..
    ```
 
 4. **Start Local Development**
+
    ```bash
    # Start ICP replica
    dfx start --background
-   
+
    # Deploy canisters
    dfx deploy
-   
+
    # Start frontend
    npm run frontend:dev
    ```
@@ -624,6 +636,7 @@ export PIPELINE_TIMEOUT="300"  # 5 minutes default
 ## Usage
 
 ### Command Line Interface
+
 ```bash
 # Interactive AI agent pipeline
 python -m agent_pipeline.cli.run
@@ -633,6 +646,7 @@ python -m agent_pipeline.core.orchestrator
 ```
 
 ### Programmatic API
+
 ```python
 from agent_pipeline.core.orchestrator import PipelineOrchestrator
 from agent_pipeline.config import PipelineConfig
@@ -662,12 +676,14 @@ print(f"Confidence: {result.confidence}")
 ### Web Interface
 
 1. **Market Creation**
+
    - Connect wallet (Plug, Stoic, or Internet Identity)
    - Navigate to "Create Market" section
    - Define market parameters and submit with stake
    - AI review and admin validation process
 
 2. **Trading Operations**
+
    - Browse available markets on homepage
    - View detailed market analysis and AI insights
    - Execute trades using automated market maker
@@ -681,6 +697,7 @@ print(f"Confidence: {result.confidence}")
 ## Development
 
 ### Local Development Commands
+
 ```bash
 # Start complete development environment
 npm run start
@@ -699,6 +716,7 @@ npm run type-check
 ```
 
 ### Production Deployment
+
 ```bash
 # Deploy to IC mainnet
 npm run deploy:ic
@@ -711,6 +729,7 @@ dfx deploy --network ic
 ```
 
 ### Testing
+
 ```bash
 # Frontend tests
 npm run test
@@ -728,6 +747,7 @@ npm run test:integration
 ## Configuration
 
 ### Agent Pipeline Settings
+
 ```python
 # config/pipeline_config.py
 PIPELINE_CONFIG = {
@@ -741,6 +761,7 @@ PIPELINE_CONFIG = {
 ```
 
 ### Market Parameters
+
 ```motoko
 // backend/canisters/market.mo
 public type MarketConfig = {
@@ -755,6 +776,7 @@ public type MarketConfig = {
 ## API Reference
 
 ### Core Agent Methods
+
 - `SearchAgent.research(question)`: Comprehensive market research
 - `AnalysisAgent.analyze_report(report, question)`: Extract trading signals
 - `PredictionAgent.generate_prediction(analysis, question)`: Probability estimation
@@ -762,12 +784,14 @@ public type MarketConfig = {
 - `ThinkThoroughlyAgent.analyze_market_thoroughly(question)`: Scenario analysis
 
 ### Market Canister Interface
+
 - `create_market(title, description, end_time)`: Create new prediction market
 - `place_trade(market_id, outcome, amount)`: Execute trade on market
 - `resolve_market(market_id, outcome)`: Resolve market outcome
 - `get_market_info(market_id)`: Retrieve market details and pricing
 
 ### User Management
+
 - `create_profile(username)`: Initialize user profile
 - `update_xp(user_id, points)`: Award experience points
 - `get_leaderboard(limit)`: Retrieve top users by performance
@@ -775,6 +799,7 @@ public type MarketConfig = {
 ## Contributing
 
 ### Development Guidelines
+
 1. Fork the repository and create feature branches
 2. Follow TypeScript and Python style guidelines
 3. Write comprehensive tests for new functionality
@@ -782,6 +807,7 @@ public type MarketConfig = {
 5. Submit pull requests with detailed descriptions
 
 ### Code Quality Standards
+
 - **TypeScript**: Strict mode with comprehensive type definitions
 - **Python**: PEP 8 compliance with type hints
 - **Motoko**: Standard formatting with documentation
@@ -795,6 +821,7 @@ MIT License - See LICENSE file for complete terms and conditions.
 ## Support
 
 For technical support, bug reports, or feature requests:
+
 - Create GitHub issues for bug reports
 - Join community discussions for general questions
 - Review documentation for implementation details
