@@ -294,7 +294,7 @@ export function CreateMarketView({ onMarketCreated }: CreateMarketViewProps) {
             <button
               type="submit"
               disabled={creating}
-              className="bg-primary-600 hover:bg-primary-700 flex w-full items-center justify-center rounded-lg py-3 font-medium text-white transition-colors disabled:bg-gray-300"
+              className="flex w-full items-center justify-center rounded-lg bg-purple-600 py-3 font-medium text-white transition-colors hover:bg-purple-700 disabled:bg-gray-300"
             >
               {creating ? (
                 <>

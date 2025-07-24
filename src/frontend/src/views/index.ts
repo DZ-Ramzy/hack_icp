@@ -3,3 +3,4 @@ export * from "./HomeView";
 export * from "./MarketView";
 export * from "./CreateMarketView";
 export * from "./LeaderboardView";
+export { default as PolysMarketHome } from "./PolysMarketHome";

@@ -54,7 +54,7 @@ service : () -> {
   add_comment : (nat64, text) -> (Result);
   buy_shares : (nat64, bool, nat64) -> (Result_1);
   create_market : (text, text, text, nat64) -> (Result);
-  get_ai_insight : (nat64) -> (opt AIInsight) query;
+  get_ai_insight : (nat64) -> (opt AIInsight);
   get_leaderboard : () -> (vec UserProfile) query;
   get_market : (nat64) -> (opt Market) query;
   get_market_comments : (nat64) -> (vec MarketComment) query;

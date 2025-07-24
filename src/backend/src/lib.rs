@@ -1,5 +1,6 @@
 use candid::{CandidType, Deserialize, Principal};
 use ic_cdk::export_candid;
+use ic_cdk::api::call::call;
 use std::cell::RefCell;
 use std::collections::HashMap;
 
@@ -71,6 +72,32 @@ pub struct MarketComment {
     pub timestamp: u64,
 }
 
+// LLM Communication structures
+#[derive(Clone, Debug, CandidType, Deserialize)]
+pub struct ChatMessageV0 {
+    pub content: String,
+    pub role: ChatRole,
+}
+
+#[derive(Clone, Debug, CandidType, Deserialize)]
+pub enum ChatRole {
+    #[serde(rename = "user")]
+    User,
+    #[serde(rename = "assistant")]
+    Assistant,
+    #[serde(rename = "system")]
+    System,
+}
+
+#[derive(Clone, Debug, CandidType, Deserialize)]
+pub struct ChatRequestV0 {
+    pub model: String,
+    pub messages: Vec<ChatMessageV0>,
+}
+
+// LLM Canister ID (replace with actual canister ID)
+const LLM_CANISTER_ID: &str = "w36hm-eqaaa-aaaal-qr76a-cai";
+
 // State management
 thread_local! {
     static MARKETS: RefCell<HashMap<u64, Market>> = RefCell::new(HashMap::new());
@@ -110,7 +137,7 @@ fn init() {
             description: "This market resolves to YES if OpenAI officially releases a model called GPT-5 during 2025.".to_string(),
             category: "Technology".to_string(),
             creator: Principal::anonymous(),
-            close_date: 1767225600,
+            close_date: 1767292799,
             status: MarketStatus::Active,
             yes_shares: 600,
             no_shares: 400,
@@ -126,7 +153,7 @@ fn init() {
             description: "This market resolves to YES if Tesla (TSLA) stock price reaches or exceeds $500 USD before June 30, 2025.".to_string(),
             category: "Finance".to_string(),
             creator: Principal::anonymous(),
-            close_date: 1719792000, // June 30, 2025
+            close_date: 1767292799, 
             status: MarketStatus::Active,
             yes_shares: 300,
             no_shares: 700,
@@ -145,7 +172,7 @@ fn init() {
             confidence: 0.72,
             risks: vec!["Regulatory crackdowns".to_string(), "Market volatility".to_string(), "Macro economic shifts".to_string()],
             prediction_lean: Some(true),
-            generated_at: 1737273600,
+            generated_at: 1767292799,
         },
         AIInsight {
             market_id: 2,
@@ -153,7 +180,7 @@ fn init() {
             confidence: 0.65,
             risks: vec!["Technical setbacks".to_string(), "Compute resource limitations".to_string(), "Safety concerns".to_string()],
             prediction_lean: Some(true),
-            generated_at: 1737273600,
+            generated_at: 1767292799,
         },
         AIInsight {
             market_id: 3,
@@ -272,19 +299,19 @@ fn buy_shares(market_id: u64, is_yes: bool, amount: u64) -> Result<Trade, String
 
             let price = calculate_price(market.yes_shares, market.no_shares, is_yes, amount);
 
-            // Update market state
+            // Update market state - liquidity should directly reflect the amount bet
             if is_yes {
                 market.yes_shares += amount;
-                market.yes_liquidity += amount * price / 1000;
+                market.yes_liquidity += amount; // Direct 1:1 relationship
             } else {
                 market.no_shares += amount;
-                market.no_liquidity += amount * price / 1000;
+                market.no_liquidity += amount; // Direct 1:1 relationship
             }
 
             market.total_volume += amount;
 
-            // Collect 2% fee
-            let fee = (amount * price * 2) / (1000 * 100);
+            // Collect 2% fee on the amount bet
+            let fee = (amount * 2) / 100;
             TREASURY.with(|treasury| {
                 *treasury.borrow_mut() += fee;
             });
@@ -358,9 +385,158 @@ fn get_leaderboard() -> Vec<UserProfile> {
     })
 }
 
-#[ic_cdk::query]
-fn get_ai_insight(market_id: u64) -> Option<AIInsight> {
-    AI_INSIGHTS.with(|insights| insights.borrow().get(&market_id).cloned())
+#[ic_cdk::update]
+async fn get_ai_insight(market_id: u64) -> Option<AIInsight> {
+    // First check if we have a cached insight
+    let cached = AI_INSIGHTS.with(|insights| insights.borrow().get(&market_id).cloned());
+    
+    // If we have a recent cached insight (less than 1 hour old), return it
+    if let Some(insight) = cached {
+        let current_time = ic_cdk::api::time();
+        let one_hour = 3600 * 1_000_000_000; // 1 hour in nanoseconds
+        
+        if current_time - insight.generated_at < one_hour {
+            return Some(insight);
+        }
+    }
+    
+    // Get market data
+    let market = MARKETS.with(|markets| markets.borrow().get(&market_id).cloned())?;
+    
+    // Create prompt for the AI agent
+    let prompt = format!(
+        "Analyze this prediction market and provide insights:
+        
+        Title: {}
+        Description: {}
+        Category: {}
+        
+        Current state:
+        - Yes liquidity: {} ICP
+        - No liquidity: {} ICP  
+        - Total volume: {} ICP
+        - Status: {:?}
+        
+        Please provide:
+        1. A brief analysis summary (2-3 sentences)
+        2. Your prediction (YES/NO) with confidence level (0-1)
+        3. Key risk factors (list 2-3 main risks)
+        
+        Format your response as JSON with keys: summary, prediction, confidence, risks",
+        market.title,
+        market.description,
+        market.category,
+        market.yes_liquidity as f64 / 100_000_000.0,
+        market.no_liquidity as f64 / 100_000_000.0,
+        market.total_volume as f64 / 100_000_000.0,
+        market.status
+    );
+    
+    // Create chat request
+    let chat_request = ChatRequestV0 {
+        model: "gpt-4o-mini".to_string(), // or whatever model you're using
+        messages: vec![
+            ChatMessageV0 {
+                role: ChatRole::System,
+                content: "You are an expert financial analyst specializing in prediction markets. Provide clear, objective analysis based on market data.".to_string(),
+            },
+            ChatMessageV0 {
+                role: ChatRole::User, 
+                content: prompt,
+            }
+        ],
+    };
+    
+    // For testing purposes, let's create a mock AI response first
+    // TODO: Remove this when the LLM canister is properly accessible
+    let market_title = MARKETS.with(|markets| {
+        markets.borrow().get(&market_id).map(|m| m.title.clone()).unwrap_or_default()
+    });
+    
+    let mock_insight = AIInsight {
+        market_id,
+        summary: format!(
+            "🤖 AI Analysis for '{}': Based on current market trends and sentiment analysis, this prediction market shows interesting dynamics. The market sentiment appears to be driven by recent news and social media discussions. Consider both bullish and bearish scenarios before making investment decisions.",
+            market_title
+        ),
+        confidence: 0.75,
+        risks: vec![
+            "Market volatility due to external events".to_string(),
+            "Limited trading volume may affect price discovery".to_string(),
+            "Information asymmetry between participants".to_string(),
+        ],
+        prediction_lean: Some(true), // Slightly bullish
+        generated_at: ic_cdk::api::time(),
+    };
+    
+    // Cache the mock insight
+    AI_INSIGHTS.with(|insights| {
+        insights.borrow_mut().insert(market_id, mock_insight.clone());
+    });
+    
+    return Some(mock_insight);
+    
+    // Call the LLM canister
+    match Principal::from_text(LLM_CANISTER_ID) {
+        Ok(llm_principal) => {
+            let response: Result<(String,), _> = call(llm_principal, "v0_chat", (chat_request,)).await;
+            
+            match response {
+                Ok((ai_response,)) => {
+                    // Parse the AI response and create AIInsight
+                    let insight = parse_ai_response(&ai_response, market_id);
+                    
+                    // Cache the insight
+                    if let Some(ref insight_to_cache) = insight {
+                        AI_INSIGHTS.with(|insights| {
+                            insights.borrow_mut().insert(market_id, insight_to_cache.clone());
+                        });
+                    }
+                    
+                    insight
+                },
+                Err(e) => {
+                    // Fallback to a default insight if AI call fails
+                    Some(AIInsight {
+                        market_id,
+                        summary: format!("AI analysis call failed: {:?}. Your Python agent may be offline or unreachable.", e),
+                        confidence: 0.3,
+                        risks: vec!["AI analysis temporarily unavailable".to_string(), "Check Python agent status".to_string()],
+                        prediction_lean: None,
+                        generated_at: ic_cdk::api::time(),
+                    })
+                }
+            }
+        },
+        Err(_) => {
+            // Invalid canister ID
+            Some(AIInsight {
+                market_id,
+                summary: "Invalid LLM canister ID configuration. Please check the setup.".to_string(),
+                confidence: 0.1,
+                risks: vec!["Configuration error".to_string()],
+                prediction_lean: None,
+                generated_at: ic_cdk::api::time(),
+            })
+        }
+    }
+}
+
+// Helper function to parse AI response
+fn parse_ai_response(response: &str, market_id: u64) -> Option<AIInsight> {
+    // Try to parse JSON response from AI
+    // This is a simplified parser - you might want to use a proper JSON library
+    
+    // For now, create a basic insight with the raw response
+    // You can enhance this to properly parse JSON
+    Some(AIInsight {
+        market_id,
+        summary: response.to_string(),
+        confidence: 0.7, // Default confidence
+        risks: vec!["Market volatility".to_string(), "Unexpected events".to_string()],
+        prediction_lean: None, // Parse from response
+        generated_at: ic_cdk::api::time(),
+    })
 }
 
 #[ic_cdk::update]

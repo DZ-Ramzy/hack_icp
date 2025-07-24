@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Header, Footer } from "./components";
+import { Header } from "./components";
+import { ModernFooter } from "./components/ModernFooter";
 import {
-  HomeView,
+  PolysMarketHome,
   MarketView,
   CreateMarketView,
   LeaderboardView,
@@ -21,11 +22,6 @@ function App() {
     }
   };
 
-  const handleMarketSelect = (marketId: bigint) => {
-    setSelectedMarketId(marketId);
-    setCurrentPage("market");
-  };
-
   const handleMarketCreated = (marketId: bigint) => {
     setSelectedMarketId(marketId);
     setCurrentPage("market");
@@ -39,7 +35,7 @@ function App() {
   const renderCurrentPage = () => {
     switch (currentPage) {
       case "home":
-        return <HomeView onMarketSelect={handleMarketSelect} />;
+        return <PolysMarketHome />;
       case "market":
         if (!selectedMarketId) {
           handleNavigate("home");
@@ -53,15 +49,15 @@ function App() {
       case "leaderboard":
         return <LeaderboardView />;
       default:
-        return <HomeView onMarketSelect={handleMarketSelect} />;
+        return <PolysMarketHome />;
     }
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-50">
+    <div className="flex min-h-screen flex-col bg-white">
       <Header currentPage={currentPage} onNavigate={handleNavigate} />
-      <main className="flex-1">{renderCurrentPage()}</main>
-      <Footer />
+      <main className="animate-fade-in flex-1">{renderCurrentPage()}</main>
+      <ModernFooter />
     </div>
   );
 }
